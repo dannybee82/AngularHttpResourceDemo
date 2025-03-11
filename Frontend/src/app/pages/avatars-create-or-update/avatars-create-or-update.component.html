@@ -1,0 +1,93 @@
+<div class="container">
+    <div class="column">
+        <div class="row pb-1">
+            <app-open-file 
+                [buttonText]="'Select Image File'" 
+                [fileExtensions]="'image/jpeg,image/jpg,image/png,image/gif'" 
+                (selectedFile)="getFile($event)">
+            </app-open-file>
+        </div>
+        <div class="row pb-1">
+            @if(this.previewImageData() !== '') {
+                <img 
+                    class="preview-image" 
+                    [src]="this.previewImageData()" 
+                    alt="Preview Image" 
+                    title="preview Image"
+                />                
+                <button                 
+                    type="button" 
+                    class="ms-1"
+                    mat-stroked-button 
+                    color="warn" 
+                    (click)="this.removeImage()" 
+                    matTooltip="Remove Image">
+                        <mat-icon>remove_circle</mat-icon>
+                        <span>Remove Image</span>
+                </button>                       
+              }
+        </div>
+        <div class="row pb-1">            
+            <form [formGroup]="this.avatarPersonForm">
+                <div class="column">
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Name</mat-label>
+                            <input type="text" matInput formControlName="name">
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Age</mat-label>
+                            <input type="number" matInput formControlName="age" [min]="18" [max]="35">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+            <form [formGroup]="this.avatarCharacteristicForm">
+                <div class="column">
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Hair Color</mat-label>
+                            <mat-select formControlName="hairColor">
+                                <mat-option value="blond">Blond</mat-option>
+                                <mat-option value="brown">Brown</mat-option>
+                                <mat-option value="red">Red</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-form-field>
+                            <mat-label>Eye Color</mat-label>
+                            <mat-select formControlName="eyeColor">
+                                <mat-option value="blue">Blue</mat-option>
+                                <mat-option value="brown">Brown</mat-option>
+                                <mat-option value="green">Green</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <mat-checkbox formControlName="hasEarrings">Has Earrings?</mat-checkbox>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row p-1"> 
+            <button type="button" mat-raised-button color="primary" (click)="submit()">
+                <mat-icon>save</mat-icon>
+                <span>{{ this.isUpdateMode() ? 'Update' : 'Create' }}</span>
+            </button>
+        </div>
+        @if(this.isUpdateMode()) {
+            <div class="row p-1"> 
+                <button type="button" mat-raised-button color="warn" (click)="deleteAvatar()">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete Avatar</span>
+                </button>
+            </div>
+        }    
+    </div>
+</div>
+@if(this.showDialog()) {
+    <app-dialog [dialog]="this.dialogData" (getConfirmation)="execDelete($event)"></app-dialog>
+}

@@ -1,0 +1,47 @@
+<div class="row p-0 ms-1">
+    <form [formGroup]="this.filterForm">
+        <div class="row w-100 p-0">
+            <div class="column">
+                <mat-form-field>
+                    <mat-label>Hair Color</mat-label>
+                    <mat-select [multiple]="true" formControlName="hairColor">
+                        <mat-option value="blond">Blond</mat-option>
+                        <mat-option value="brown">Brown</mat-option>
+                        <mat-option value="red">Red</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>       
+            <div class="column">
+                <mat-form-field>
+                    <mat-label>Eye Color</mat-label>
+                    <mat-select [multiple]="true" formControlName="eyeColor">
+                        <mat-option value="blue">Blue</mat-option>
+                        <mat-option value="brown">Brown</mat-option>
+                        <mat-option value="green">Green</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="column">
+                <mat-checkbox formControlName="hasEarrings">Has Earrings?</mat-checkbox>   
+            </div>
+            @if(this.isFilterOn()) {
+                <div class="column">
+                    <button type="button" mat-raised-button color="warn" (click)="reset()">
+                        <mat-icon>cancel</mat-icon>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            }
+        </div>
+    </form>
+</div>
+@if(this.isFilterOn()) {
+    <div class="row p-0 ms-1">
+        @for(item of this.getActiveFilters(); track $index) {
+            <button type="button" mat-stroked-button color="accent" (click)="removeFilter(item.name, item.value)" class="ms-1">
+                 <span>{{ `${item.title }: ${item.value | titlecase}` }}</span>
+                 <mat-icon>cancel</mat-icon>
+            </button>
+         }
+    </div>
+}

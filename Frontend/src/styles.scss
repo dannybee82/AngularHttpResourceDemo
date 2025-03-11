@@ -1,0 +1,92 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/ngx-toastr/toastr.css";
+@import '../node_modules/cropperjs/dist/cropper.min.css'; 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.container {
+    display: flex;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.flex-end {
+   justify-content: flex-end;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    padding: 16px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.w-25 {
+    width: 25%;
+}
+
+.avatar-image {
+    max-width: 200px;
+    height: auto;
+    align-self: center;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 16px;
+    row-gap: 16px;
+}
+
+.pb-1 {
+    padding-bottom: 16px;
+}
+
+.p-0 {
+    padding: 0!important;
+}
+
+.p-1 {
+    padding: 16px;
+}
+
+.p-2 {
+    padding: 32px;
+}
+
+.p-3 {
+    padding: 48px;
+}
+
+.ms-1 {
+    margin-left: 16px;
+}
+
+.mt-2 {
+    margin-top: 32px;
+}
+
+.col-auto {
+    width: auto;
+}
+
+//Bug in Cropper-JS for release -> fix:
+.cropper-view-box {
+    border-radius: 50%;
+}

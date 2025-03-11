@@ -1,0 +1,47 @@
+<div class="container w-100 p-1">
+
+    @if(this.isLoading()) {
+        <div class="row p-1">
+            Loading...
+        </div>
+    }
+
+    @if(this.data() && !this.isLoading()) {
+        <div class="row p-1 w-100">
+            <mat-card appearance="outlined" class="w-25">
+                <mat-card-header>
+                    <mat-card-title>{{this.data()?.name}}</mat-card-title>
+                    <mat-card-subtitle>{{ `Age: ${this.data()?.age}` }}</mat-card-subtitle>
+                </mat-card-header>                    
+                @if(this.data()?.avatarImage?.base64) {
+                    <img mat-card-image [src]="this.data()?.avatarImage?.base64" [alt]="this.data()?.name" [title]="this.data()?.name" class="avatar-image">
+                }
+                <mat-card-content>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Hair Color</th>
+                                <td>{{ this.data()?.avatarCharacteristic?.hairColor | titlecase }}</td>
+                            </tr>
+                            <tr>
+                                <th>Eye Color</th>
+                                <td>{{ this.data()?.avatarCharacteristic?.eyeColor | titlecase }}</td>
+                            </tr>
+                            <tr>
+                                <th>Has Earrings</th>
+                                <td>{{ this.data()?.avatarCharacteristic?.hasEarrings ?? false ? 'Yes' : 'No' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
+
+    @if(this.error()) {
+        <div class="row p-1">
+            Error: Can't fetch Avatar.
+        </div>
+    }
+
+</div>

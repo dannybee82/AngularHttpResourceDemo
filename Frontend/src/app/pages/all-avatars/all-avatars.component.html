@@ -1,0 +1,48 @@
+<app-filters
+    (filterValues)="this.filterAvatars($event)">
+</app-filters>
+<div class="column p-1">   
+    @if(this.isLoading()) {
+        <div class="row p-1">
+            <p>Loading...</p>
+        </div>
+    }
+
+    @if(this.data() && !this.isLoading()) {
+        @if(this.data()?.length ?? 0 > 0)  {
+            <div class="row p-0 ms-1 w-100">
+                <h3>{{ `${this.data()?.length} Avatars` }}</h3>
+            </div>
+            <div class="grid-container w-50 p-1">
+                @for(avatar of this.data(); track avatar.id) {
+                    <mat-card appearance="outlined">
+                        <mat-card-header>
+                            <mat-card-title>{{avatar.name}}</mat-card-title>
+                            <mat-card-subtitle>{{ `Age: ${avatar.age}` }}</mat-card-subtitle>
+                        </mat-card-header>                    
+                        @if(avatar.avatarImage?.base64) {
+                            <img mat-card-image [src]="avatar.avatarImage?.base64" [alt]="avatar.name" [title]="avatar.name" class="avatar-image">        
+                        }                    
+                        <mat-card-actions [align]="'end'">
+                            <button type="button" mat-icon-button matTooltip="Show details" [routerLink]="['/avatar-details', avatar.id]">
+                                <mat-icon>list</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button matTooltip="Edit avatar" [routerLink]="['/edit', 'update', avatar.id]">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                }                                    
+            </div>
+        } @else {
+            <p>There are no avatars to show</p>
+        }
+    }
+
+    @if(this.error()) {
+        <div class="row p-1">
+            <p>Error occurred: {{ this.error() }}</p>
+        </div>
+    }
+</div>
+<app-scroll-to-top></app-scroll-to-top>

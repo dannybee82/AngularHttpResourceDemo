@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  postgresql_db_avatar_example:
+    image: postgres:16.4
+    container_name: postgresql_db_avatar_example
+    restart: unless-stopped
+    environment:      
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Test2025!
+      - POSTGRES_DB=AvatarsExample
+    ports: 
+      - "5432:5432"

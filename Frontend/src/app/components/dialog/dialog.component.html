@@ -1,0 +1,59 @@
+@if(this.dialog()) {
+    <div class="container justify-content-center modal" (click)="this.closeDialog()">
+      <div class="column contents p-1" (click)="$event.stopPropagation()">
+        <div class="row">
+          @if(this.getType().NONE != this.dialog()?.dialogType) {
+            <div class="row p-0">
+              <p>
+                @switch (this.dialog()?.dialogType) {
+                  @case (this.getType().INFO) {
+                    <mat-icon>info</mat-icon>
+                  }
+                  @case(this.getType().QUESTION) {
+                    <mat-icon>help</mat-icon>
+                  }
+                  @case(this.getType().WARNING) {
+                    <mat-icon>warning</mat-icon>
+                  }
+                  @case(this.getType().ERROR) {
+                    <mat-icon>dangerous</mat-icon>
+                  }
+                }                
+              </p>
+              <p><strong class="ms-1 pt-1">{{ this.dialog()?.dialogTitle }}</strong></p>
+            </div>
+          }
+        </div>
+        <div class="row p-0">
+          <div class="col-auto  ms-1">
+            {{ this.dialog()?.dialogMessage }}
+          </div>
+        </div>
+        @if( this.dialog()?.dialogAdditionalText ) {
+          <div class="row p-0">
+            <div class="col-auto ms-1">
+              {{ this.dialog()?.dialogAdditionalText }}
+            </div>
+          </div>
+        }
+        <div class="row p-0 flex-end mt-2">
+          @if(this.dialog()?.dialogCancellationText !== '') {
+            <div class="column">
+              <button type="button"mat-raised-button color="warn" (click)="this.cancel()">
+                <mat-icon>close</mat-icon>
+                <span class="ms-1">{{ this.dialog()?.dialogCancellationText }}</span>
+              </button>
+            </div>
+          }
+          <div class="column">
+            <button type="button" mat-raised-button color="primary" (click)="this.ok()">
+              @if(this.dialog()?.dialogConfirmationIcon) {
+                <mat-icon>{{this.dialog()?.dialogConfirmationIcon}}</mat-icon>
+              }
+              <span class="ms-1">{{ this.dialog()?.dialogConfirmationText }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+}
