@@ -12,7 +12,7 @@ export abstract class GenericsCreateOrUpdateClass<T> implements GenericsCreateOr
     entity: WritableSignal<T | undefined> = signal(undefined);
     
     createOrUpdateResource: HttpResourceRef<boolean | undefined> = httpResource<boolean | undefined>(() => {
-        if(this.apiUrl() && this.entity()) {
+        if(this.apiUrl() && this.method() && this.entity()) {
             return {
                 url: `${this.apiUrl()}`,
                 method: this.method(),
@@ -29,12 +29,12 @@ export abstract class GenericsCreateOrUpdateClass<T> implements GenericsCreateOr
     status: Signal<ResourceStatus> = this.createOrUpdateResource.status;
     statusCode: Signal<number | undefined> = this.createOrUpdateResource.statusCode;
 
-    onChangeEntity(entity: T): void {
-        this.entity.set(entity);
-    }
-
     destroyResource(): void {
         this.createOrUpdateResource.destroy();
+    }
+
+    onChangeEntity(entity: T): void {
+        this.entity.set(entity);
     }
 
 }
