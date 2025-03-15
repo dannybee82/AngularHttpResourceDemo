@@ -15,8 +15,8 @@ export abstract class GenericsCreateOrUpdateClass<T> implements GenericsCreateOr
         if(this.apiUrl() && this.entity()) {
             return {
                 url: `${this.apiUrl()}`,
-            method: this.method(),
-            body: this.entity()  
+                method: this.method(),
+                body: this.entity()  
             };
         }
 
