@@ -69,4 +69,8 @@ _July 2025_
 
 \- Removed _Zone.js_, removed _RxJS_ and removed polyfills from _angular.json_.
 
+\- Removed files: _app.component.html_ and _app.component.scss_.
+
+\- Removed empty constructors.
+
 _\- Various other small changes._

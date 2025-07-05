@@ -18,12 +18,8 @@ const api: string = environment.endpoint;
 })
 export class AvatarsDetailsComponent extends GenericsByIdClass<AvatarPerson> implements OnInit {
 
-  id: InputSignal<number> = input.required();
+  readonly id: InputSignal<number> = input.required();
   
-  constructor() {
-    super();
-  }
-
   ngOnInit(): void {
     this.apiUrl.set(`${api}Avatar/GetById`);
     this.targetId.set(this.id());

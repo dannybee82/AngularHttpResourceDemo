@@ -21,9 +21,9 @@ export class FiltersComponent implements OnInit {
  
   filterForm: UntypedFormGroup = new FormGroup({});
 
-  filterValues: OutputEmitterRef<FilterData | undefined> = output<FilterData | undefined>();
+  readonly filterValues: OutputEmitterRef<FilterData | undefined> = output<FilterData | undefined>();
 
-  isFilterOn: WritableSignal<boolean> = signal(false);
+  protected isFilterOn: WritableSignal<boolean> = signal(false);
 
   private fb = inject(FormBuilder);
   private titleCasePipe = inject(TitleCasePipe);

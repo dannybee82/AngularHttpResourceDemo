@@ -23,10 +23,6 @@ const api: string = environment.endpoint;
 })
 export class AllAvatarsComponent extends GenericsByParamsClass<AvatarPerson> implements OnInit {
 
-  constructor() {
-    super();
-  }
-
   ngOnInit(): void {
     this.apiUrl.set(`${api}Avatar/GetAll`);
 

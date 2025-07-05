@@ -34,12 +34,12 @@ const api: string = environment.endpoint;
 })
 export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<AvatarPerson> implements OnInit {
 
-  mode: InputSignal<string> = input.required();
-  id: InputSignal<number> = input.required();
+  readonly mode: InputSignal<string> = input.required();
+  readonly id: InputSignal<number> = input.required();
 
-  isUpdateMode: WritableSignal<boolean> = signal(false);
-  previewImageData: WritableSignal<string> = signal('');
-  showDialog: WritableSignal<boolean> = signal(false);
+  protected isUpdateMode: WritableSignal<boolean> = signal(false);
+  protected previewImageData: WritableSignal<string> = signal('');
+  protected showDialog: WritableSignal<boolean> = signal(false);
   
   dialogData: Dialog = {
     dialogType: DialogType.WARNING,
@@ -104,10 +104,6 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
   private router = inject(Router);
   private avatarByIdService = inject(AvatarByIdService);
   private avatarDeleteService = inject(AvatarDeleteService);
-
-  constructor() {
-    super();
-  }
 
   ngOnInit(): void {
     if(this.mode() === 'update') {

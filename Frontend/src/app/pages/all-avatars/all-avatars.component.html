@@ -7,7 +7,6 @@
             <p>Loading...</p>
         </div>
     }
-
     @if(this.data() && !this.isLoading()) {
         @if(this.data()?.length ?? 0 > 0)  {
             <div class="row p-0 ms-1 w-100">
@@ -38,7 +37,6 @@
             <p>There are no avatars to show</p>
         }
     }
-
     @if(this.error()) {
         <div class="row p-1">
             <p>Error occurred: {{ this.error() }}</p>

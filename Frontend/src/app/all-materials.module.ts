@@ -38,4 +38,4 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule
   ]
 })
-export class AllMaterialsModule { }
+export class AllMaterialsModule {}
