@@ -44,8 +44,13 @@ export class FiltersComponent implements OnInit {
     const filterData: FilterData = this.getCurrentFilters();
 
     if(filterData.hairColor || filterData.eyeColor || filterData.hasEarrings === true) {
-      this.isFilterOn.set(true);
-      this.filterValues.emit(filterData);
+      if(this.hasContent(filterData)) {
+        this.isFilterOn.set(true);
+        this.filterValues.emit(this.sanitizeContent(filterData));
+      } else {
+        this.isFilterOn.set(false);
+        this.filterValues.emit(undefined);
+      }      
     } else {
       this.isFilterOn.set(false);
       this.filterValues.emit(undefined);
@@ -91,18 +96,20 @@ export class FiltersComponent implements OnInit {
     const index: number = keys.indexOf(name);
 
     if(index > -1) {
-      const property = keys[index] as keyof typeof filterData;
-      const targetValues: (string[] | boolean) | undefined = filterData[property];
-      
-      if(targetValues) { 
-        if(Array.isArray(targetValues)) { 
-          let arr: string[] = (targetValues as string[]).filter(item => item !== value);
-          
-          //@ts-ignore
-          filterData[property] = arr.length === 0 ? undefined : arr;
-        } else {
-          filterData[property] = undefined;
-        }
+      const property = keys[index] as keyof FilterData;  
+      const targetValues = filterData[property];  
+        
+      if (targetValues) {  
+        if (typeof targetValues === 'boolean') {  
+          filterData[property] = undefined;  
+        } else {  
+          // For string array properties  
+          // Use a type assertion to tell TypeScript this is a string[] property  
+          const stringArrayProperty = property as keyof Pick<FilterData, 'hairColor' | 'eyeColor'>;  
+          const workValues = targetValues as string[];  
+          let arr = workValues.filter(item => item !== value);  
+          filterData[stringArrayProperty] = arr.length === 0 ? [] : arr;  
+        }  
       }
 
       if(filterData.hairColor || filterData.eyeColor || filterData.hasEarrings === true) {
@@ -127,6 +134,38 @@ export class FiltersComponent implements OnInit {
 
     if(!filterData.hasEarrings) {
       delete filterData.hasEarrings;      
+    }
+
+    return filterData;
+  }
+
+  private hasContent(filterData: FilterData): boolean {
+    if(filterData.hairColor || filterData.eyeColor || filterData.hasEarrings === true) {
+      if(filterData.hairColor?.length ?? 0 > 0) {
+          return true;
+      }
+
+      if(filterData.eyeColor?.length ?? 0 > 0) {
+        return true;
+      }
+
+      return filterData.hasEarrings === true;
+    }
+
+    return false;
+  }
+
+  private sanitizeContent(filterData: FilterData): FilterData {
+    if(filterData.hairColor) {
+      if(filterData.hairColor.length === 0) {
+        delete filterData.hairColor;
+      }
+    }
+
+    if(filterData.eyeColor) {
+      if(filterData.eyeColor.length === 0) {
+        delete filterData.eyeColor;
+      }
     }
 
     return filterData;

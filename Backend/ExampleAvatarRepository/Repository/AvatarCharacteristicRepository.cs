@@ -60,7 +60,12 @@ namespace ExampleAvatarRepository.Repository
                 await _dbContext.SaveChangesAsync();
             }
         }
-
+        public async Task StopTracking()
+        {
+            await Task.Run(() => {
+                _dbContext.ChangeTracker.Clear();
+            });
+        }
     }
 
 }

@@ -18,6 +18,8 @@ namespace ExampleAvatarRepository.Repository
         Task Update(AvatarImage entity);
 
         Task Delete(int id);
+
+        Task StopTracking();
     }
 
 }

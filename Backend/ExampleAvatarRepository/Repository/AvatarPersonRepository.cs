@@ -75,6 +75,12 @@ namespace ExampleAvatarRepository.Repository
             }
         }
 
+        public async Task StopTracking()
+        {
+            await Task.Run(() => {
+                _dbContext.ChangeTracker.Clear();
+            });
+        }
     }
 
 }

@@ -47,17 +47,20 @@ namespace ExampleAvatarService.Services
 
                 if(record != null)
                 {
-                    if(record.AvatarCharacteristicId != null)
+                    await _avatarPersonRepository.StopTracking();
+                    await _avatarPersonRepository.Delete(record.Id);
+
+                    if (record.AvatarCharacteristicId != null)
                     {
+                        await _avatarCharacteristicRepository.StopTracking();
                         await _avatarCharacteristicRepository.Delete(record.AvatarCharacteristicId ?? 0);
                     }
 
                     if(record.AvatarImageId != null)
                     {
+                        await _avatarImageRepository.StopTracking();
                         await _avatarImageRepository.Delete(record.AvatarImageId ?? 0);
-                    }
-
-                    await _avatarPersonRepository.Delete(record.Id);
+                    }                    
                 }                
             }
             catch (Exception ex)

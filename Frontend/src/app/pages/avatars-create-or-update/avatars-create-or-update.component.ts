@@ -50,7 +50,7 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
     dialogConfirmationIcon: 'delete'
   };
 
-  private _updateData: AvatarPerson | undefined = undefined;
+  private _updateData: WritableSignal<AvatarPerson | undefined> = signal(undefined);
 
   isApiFinished: EffectRef = effect(() => {
     if(this.statusCode() === 200 && this.data()) {
@@ -59,35 +59,38 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
       this.router.navigate(['/all-avatars']);
     }
     
-    if(this.status() === 1) {
+    if(this.status() === 'error') {
       this.toastr.error(this.isUpdateMode() ? 'Can\'t update Avatar' : 'Can\'t create Avatar');
     }
   });
 
   isDataFetched: EffectRef = effect(() => {
     if(this.service().data() && this.service().statusCode() === 200) {
-      this._updateData = this.service().data();
+      this._updateData.set(this.service().data());
 
-      this.avatarPersonForm.patchValue(this._updateData ?? {});
-      this.avatarCharacteristicForm.patchValue(this._updateData?.avatarCharacteristic ?? {});
-      this.previewImageData.set(this._updateData?.avatarImage?.base64 ?? '');
+      if(this._updateData()) { 
+        this.avatarPersonForm.patchValue(this._updateData()!);
+        this.avatarCharacteristicForm.patchValue(this._updateData()?.avatarCharacteristic ?? {});
+        this.previewImageData.set(this._updateData()?.avatarImage?.base64 ?? '');
+      }      
 
       this.service().apiUrl.set('');
       this.service().targetId.set(0);
     }
 
-    if(this.service().status() === 1) {
+    if(this.service().status() === 'error') {
       this.toastr.error('Can\'t fetch Avatar to update');
     }
   });
 
   isAvatarDeleted: EffectRef = effect(() => {
     if(this.avatarDeleteService.data() && this.avatarDeleteService.statusCode() === 200) {
+      this.avatarDeleteService.targetId.set(0);
       this.toastr.success('Avatar deleted successfully');
       this.router.navigate(['/all-avatars']);
     }
 
-    if(this.avatarDeleteService.status() === 1) {
+    if(this.avatarDeleteService.status() === 'error') {
       this.toastr.error('Can\'t delete Avatar');
     }
   });
@@ -164,10 +167,10 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
       avatarPerson.avatarCharacteristic = avatarCharacteristics;
       avatarPerson.avatarImage = avatarImage;
 
-      if(this.isUpdateMode() && this._updateData) {
-        avatarPerson.id = this._updateData.id;
-        avatarPerson.avatarCharacteristic.id = this._updateData.avatarCharacteristic?.id ?? 0;
-        avatarPerson.avatarImage.id = this._updateData.avatarImage?.id ?? 0;
+      if(this.isUpdateMode() && this._updateData()) {
+        avatarPerson.id = this._updateData()!.id;
+        avatarPerson.avatarCharacteristic.id = this._updateData()?.avatarCharacteristic?.id ?? 0;
+        avatarPerson.avatarImage.id = this._updateData()?.avatarImage?.id ?? 0;
       }
 
       this.entity.set(avatarPerson);
@@ -187,9 +190,9 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
   }
 
   deleteAvatar(): void {
-    if(this._updateData) {
+    if(this._updateData()) {
       this.dialogData.dialogMessage = 'Do you want to delete the Avatar below?';
-      this.dialogData.dialogAdditionalText = `Avatar: ${this._updateData.name} - Age: ${this._updateData.age}`;  
+      this.dialogData.dialogAdditionalText = `Avatar: ${this._updateData()!.name} - Age: ${this._updateData()!.age}`;  
       this.showDialog.set(true);
     }   
   }
