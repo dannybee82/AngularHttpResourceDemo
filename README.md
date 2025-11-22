@@ -1,6 +1,6 @@
-### **Angular 20 HttpResource Avatars Demo + .NET/C# WebAPI + PostgreSQL database**
+### **Angular 21 HttpResource Avatars Demo + .NET/C# WebAPI + PostgreSQL database**
 
-A demo that demonstrates the new experimental **Angular 20** _HttpResource_ function.  
+A demo that demonstrates the new experimental **Angular 21** _HttpResource_ function.  
 It uses a simple .NET/C# WebAPI as Backend and a PostgreSQL database.  
 The .NET/C# WebAPI stores Avatars/images in the database as base64-strings.
 
@@ -29,7 +29,7 @@ For more information see the link below:
 
 [https://learn.microsoft.com/en-us/ef/core/cli/dotnet](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)
 
-### **Angular application (with** [**Angular CLI**](https://github.com/angular/angular-cli) **version 20.0.5) installation**
+### **Angular application (with** [**Angular CLI**](https://github.com/angular/angular-cli) **version 21.0.0) installation**
 
 **Command to install**
 
@@ -48,6 +48,16 @@ or shorter:
 _ng s --o_
 
 ### **Changelog:**
+
+_November 2025_
+
+**Frontend changes:** 
+
+\- Upgrade to _Angular 21_ and upgraded other packages.
+
+*   Removed deprecated _Karma_ and installed _Vitest._
+*   Migrated _Jasmine_ tests to _Vitest_ tests for future use (command: **ng generate refactor-jasmine-vitest**).
+*   _HttpClient_ removed from _app.config.ts_ (_HttpClient_ is default in _Angular 21_).
 
 _July 2025_
 

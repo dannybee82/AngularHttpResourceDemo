@@ -34,7 +34,7 @@ export class ScrollToTopComponent {
     });
   }
 
-  @HostListener("window:scroll", ["$event"])
+  @HostListener("window:scroll")
   onWindowScroll() : void {
     let pos: number = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
     this.isVisible.set((pos - this.max > 1.0) ? true : false);
