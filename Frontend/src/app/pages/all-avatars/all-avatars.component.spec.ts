@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AllAvatarsComponent } from './all-avatars.component';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('AllAvatarsComponent', () => {
   let component: AllAvatarsComponent;

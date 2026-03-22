@@ -1,46 +1,50 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { AvatarPerson } from '../../models/avatar/avatar-person.interface';
-import { environment } from '../../../environments/environment';
 import { FiltersComponent } from '../../components/filters/filters.component';
 import { FilterData } from '../../models/filter/filter-data.interface';
-import { GenericsByParamsClass } from '../../services/generics/by_params/generics-by-params.abstract';
+import { GenericsByParamsService } from '../../services/generics/by_params/generics-by-params';
 import { AllMaterialsModule } from '../../all-materials.module';
 import { RouterLink } from '@angular/router';
 import { ScrollToTopComponent } from '../../components/scroll-to-top/scroll-to-top.component';
-
-const api: string = environment.endpoint;
+import { GenericsAllService } from '../../services/generics/all/generics-all';
+import { RESOURCE_CONFIG } from '../../services/generics/tokens/resource.config';
 
 @Component({
   selector: 'app-all-avatars',
-  imports: [
-    FiltersComponent,
-    AllMaterialsModule,
-    RouterLink,
-    ScrollToTopComponent
-  ],
+  imports: [FiltersComponent, AllMaterialsModule, RouterLink, ScrollToTopComponent],
   templateUrl: './all-avatars.component.html',
-  styleUrl: './all-avatars.component.scss'
+  styleUrl: './all-avatars.component.scss',
+    providers: [  
+    GenericsAllService, GenericsByParamsService,  
+    {  
+      provide: RESOURCE_CONFIG,  
+      useValue: {  
+        controller: 'Avatar',  
+        methodGetAll: 'GetAll',  
+        methodByParams: 'Filter'  
+      }  
+    }  
+  ]
 })
-export class AllAvatarsComponent extends GenericsByParamsClass<AvatarPerson> implements OnInit {
+export class AllAvatarsComponent {
 
-  ngOnInit(): void {
-    this.apiUrl.set(`${api}Avatar/GetAll`);
+  protected filterData: WritableSignal<FilterData | undefined> = signal(undefined);
 
-    if(this.data()) {
-      this.reload();
-    }
-    
-    //this.getByParamsResource.reload();
-  }
+  protected readonly avatarServiceAll = inject(GenericsAllService<AvatarPerson>);
+  protected readonly avatarServiceByParams = inject(GenericsByParamsService<AvatarPerson>);
   
   filterAvatars($event: FilterData | undefined): void {
     if($event) {
-      this.targetParams.set($event);
-      this.apiUrl.set(`${api}Avatar/Filter`);
+      this.filterData.set($event);   
+      this.avatarServiceByParams.params.set($event);   
     } else {
-      this.targetParams.set(undefined);
-      this.apiUrl.set(`${api}Avatar/GetAll`);
+      this.filterData.set(undefined); 
+      this.avatarServiceByParams.params.set(undefined);     
     }
+  }
+
+  get service() {
+    return this.filterData() === undefined ? this.avatarServiceAll : this.avatarServiceByParams;
   }
 
 }

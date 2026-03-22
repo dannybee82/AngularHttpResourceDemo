@@ -1,16 +1,11 @@
-import { HttpResourceRef } from "@angular/common/http";
 import { Signal, WritableSignal } from "@angular/core";
 
 export interface GenericsByIdInterface<T> {
-    targetId: WritableSignal<number>;
+    id: WritableSignal<number | undefined>;
 
-    getByIdResource: HttpResourceRef<T | undefined>;
-   
     data: Signal<T | undefined>;    
 
-    onTargetIdChange(id: number): void;
-
-    hasValue: boolean;
+    hasValue: Signal<boolean>;
 
     reload(): void;
 }

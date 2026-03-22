@@ -1,4 +1,5 @@
 ﻿using ExampleAvatarRepository.DummyData;
+using ExampleAvatarRepository.DummyData.DummyAvatarImages;
 using ExampleAvatarRepository.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,17 +25,52 @@ namespace ExampleAvatarRepository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Add dummy data to the database.
+            // Add dummy data to the database.
+            // Characteristics
+            var allCharacteristics = CreateDummyAvatarCharacteristic.Create();
+
+            // Add indexes.
+            for (int i = 0; i < allCharacteristics.Count(); i++)
+            {
+                allCharacteristics[i].Id = i + 1;
+            }
+
             modelBuilder.Entity<AvatarCharacteristic>().HasData(
-                CreateDummyAvatarCharacteristic.Create()
+                allCharacteristics
             );
+
+            // Images
+            var allImages = CreateDummyAvatarImagePart_001.Create()
+                .Concat(CreateDummyAvatarImagePart_002.Create())
+                .Concat(CreateDummyAvatarImagePart_003.Create())
+                .Concat(CreateDummyAvatarImagePart_004.Create())
+                .Concat(CreateDummyAvatarImagePart_005.Create())
+                .Concat(CreateDummyAvatarImagePart_006.Create())
+            .ToList();
+
+            // Add indexes.
+            for (int i = 0; i < allImages.Count(); i++)
+            {
+                allImages[i].Id = i + 1;
+            }
 
             modelBuilder.Entity<AvatarImage>().HasData(
-                CreateDummyAvatarImage.Create()
+                allImages
             );
 
+            // Avatars
+            var allAvatars = CreateDummyAvatarPerson.Create();
+
+            // Add indexes.
+            for (int i = 0; i < allAvatars.Count(); i++)
+            {
+                allAvatars[i].Id = i + 1;
+                allAvatars[i].AvatarImageId = i + 1;
+                allAvatars[i].AvatarCharacteristicId = i + 1;
+            }
+
             modelBuilder.Entity<AvatarPerson>().HasData(
-                CreateDummyAvatarPerson.Create()
+                allAvatars
             );
         }
 

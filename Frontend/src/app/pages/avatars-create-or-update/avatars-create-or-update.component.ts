@@ -1,43 +1,60 @@
-import { Component, effect, EffectRef, inject, input, InputSignal, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, input, InputSignal, ResourceStatus, Signal, signal, WritableSignal } from '@angular/core';
 import { AllMaterialsModule } from '../../all-materials.module';
-import { FormGroup, UntypedFormGroup, FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { OpenFileComponent } from '../../components/open-file/open-file.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageCropperComponent } from '../../components/image-cropper/image-cropper.component';
 import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { AvatarPerson } from '../../models/avatar/avatar-person.interface';
-import { AvatarCharacteristic } from '../../models/avatar/avatar-characteristic.interface';
-import { AvatarImage } from '../../models/avatar/avatar-image.interface';
-import { GenericsCreateOrUpdateClass } from '../../services/generics/create_or_update/generics-create-or-update.abstract';
-import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-import { AvatarByIdService } from '../../services/avatars/avatar-by-id.service';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 import { Dialog } from '../../models/dialog/dialog.interface';
 import { DialogType } from '../../models/dialog/dialog-type.enum';
-import { AvatarDeleteService } from '../../services/avatars/avatar-delete.service';
-
-const api: string = environment.endpoint;
+import { GenericsByIdService } from '../../services/generics/by_id/generics-by-id';
+import { GenericsCreateService } from '../../services/generics/create/generics-create';
+import { GenericsUpdateService } from '../../services/generics/update/generics-update';
+import { GenericsDeleteService } from '../../services/generics/delete/generics-delete';
+import { RESOURCE_CONFIG } from '../../services/generics/tokens/resource.config';
+import { form, max, min, required, FormField } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-avatars-create-or-update',
-  imports: [
-    AllMaterialsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    OpenFileComponent,
-    DialogComponent
-  ],
+  imports: [AllMaterialsModule, OpenFileComponent, DialogComponent, FormField],
   templateUrl: './avatars-create-or-update.component.html',
-  styleUrl: './avatars-create-or-update.component.scss'
+  styleUrl: './avatars-create-or-update.component.scss',
+    providers: [  
+    GenericsByIdService, GenericsCreateService, GenericsUpdateService, GenericsDeleteService,  
+    {  
+      provide: RESOURCE_CONFIG,  
+      useValue: {  
+        controller: 'Avatar',  
+        methodById: 'GetById',
+        methodCreate: 'Create',
+        methodUpdate: 'Update',
+        methodDelete: 'Delete'
+      }  
+    }  
+  ]
 })
-export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<AvatarPerson> implements OnInit {
+export class AvatarsCreateOrUpdateComponent {
 
   readonly mode: InputSignal<string> = input.required();
   readonly id: InputSignal<number> = input.required();
 
-  protected isUpdateMode: WritableSignal<boolean> = signal(false);
+  private readonly byIdService = inject(GenericsByIdService<AvatarPerson>);  
+  private readonly createService = inject(GenericsCreateService<AvatarPerson>);  
+  private readonly updateService = inject(GenericsUpdateService<AvatarPerson>);
+  private readonly deleteService = inject(GenericsDeleteService);
+  protected readonly dialog = inject(MatDialog);
+  private readonly toastr = inject(ToastrService);
+  private readonly router = inject(Router);
+
+  readonly isUpdateMode: Signal<boolean> = computed(() => this.mode() === 'update');
+
+  readonly avatar = this.byIdService.data;  
+  readonly isLoading = this.byIdService.isLoading;  
+  readonly error: Signal<Error | undefined> = this.byIdService.error;
+
   protected previewImageData: WritableSignal<string> = signal('');
   protected showDialog: WritableSignal<boolean> = signal(false);
   
@@ -50,79 +67,79 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
     dialogConfirmationIcon: 'delete'
   };
 
-  private _updateData: WritableSignal<AvatarPerson | undefined> = signal(undefined);
-
-  isApiFinished: EffectRef = effect(() => {
-    if(this.statusCode() === 200 && this.data()) {
-      this.toastr.success(this.isUpdateMode() ? 'Avatar updated successfully' : 'Avatar created successfully');
-      this.destroyResource();
-      this.router.navigate(['/all-avatars']);
-    }
-    
-    if(this.status() === 'error') {
-      this.toastr.error(this.isUpdateMode() ? 'Can\'t update Avatar' : 'Can\'t create Avatar');
-    }
-  });
-
-  isDataFetched: EffectRef = effect(() => {
-    if(this.service().data() && this.service().statusCode() === 200) {
-      this._updateData.set(this.service().data());
-
-      if(this._updateData()) { 
-        this.avatarPersonForm.patchValue(this._updateData()!);
-        this.avatarCharacteristicForm.patchValue(this._updateData()?.avatarCharacteristic ?? {});
-        this.previewImageData.set(this._updateData()?.avatarImage?.base64 ?? '');
-      }      
-
-      this.service().apiUrl.set('');
-      this.service().targetId.set(0);
-    }
-
-    if(this.service().status() === 'error') {
-      this.toastr.error('Can\'t fetch Avatar to update');
+  protected formModel: WritableSignal<AvatarPerson> = signal({
+    name: '',
+    age: 18,
+    avatarCharacteristic: {
+      hairColor: 'blond',
+      eyeColor: 'blue',
+      hasEarrings: false
+    },
+    avatarImage: {
+      base64: ''
     }
   });
-
-  isAvatarDeleted: EffectRef = effect(() => {
-    if(this.avatarDeleteService.data() && this.avatarDeleteService.statusCode() === 200) {
-      this.avatarDeleteService.targetId.set(0);
-      this.toastr.success('Avatar deleted successfully');
-      this.router.navigate(['/all-avatars']);
-    }
-
-    if(this.avatarDeleteService.status() === 'error') {
-      this.toastr.error('Can\'t delete Avatar');
-    }
+  protected avatarForm = form(this.formModel, (f) => {
+    required(f.name),
+    required(f.age),
+    min(f.age, 18),
+    max(f.age, 35)
+    required(f.avatarCharacteristic!.hairColor),
+    required(f.avatarCharacteristic!.eyeColor)
   });
 
-  avatarPersonForm: UntypedFormGroup = new FormGroup({});
-  avatarCharacteristicForm: UntypedFormGroup = new FormGroup({});
-
-  public dialog = inject(MatDialog);
-  private fb = inject(FormBuilder);
-  private toastr = inject(ToastrService);
-  private router = inject(Router);
-  private avatarByIdService = inject(AvatarByIdService);
-  private avatarDeleteService = inject(AvatarDeleteService);
-
-  ngOnInit(): void {
-    if(this.mode() === 'update') {
-      this.isUpdateMode.set(true);
-      this.service().apiUrl.set(`${api}Avatar/GetById`);
-      this.service().targetId.set(this.id());
-    } else {
-      this.isUpdateMode.set(false);
-    }    
-
-    this.avatarPersonForm = this.fb.group({
-      name: ['', Validators.required],
-      age: [18, [Validators.required, Validators.min(18), Validators.max(35)]]
+  constructor() {
+    effect(() => {  
+      this.byIdService.id.set(this.isUpdateMode() ? this.id() ?? "0" : undefined);  
+    });  
+  
+    effect(() => {  
+      const data: AvatarPerson = this.avatar();
+      if (data) 
+      {
+          this.formModel.set(data);
+          this.avatarForm().value.set(data);
+          this.previewImageData.set(data.avatarImage?.base64 ?? '');
+      }  
     });
 
-    this.avatarCharacteristicForm = this.fb.group({
-      hairColor: ['', Validators.required],
-      eyeColor: ['', Validators.required],
-      hasEarrings: [false]
+    effect(() => {
+      const resolved: ResourceStatus = 'resolved';
+      const error: ResourceStatus = 'error';
+      const updateFinished = this.updateService.status();
+      const createFinished = this.createService.status();
+      const deleteFinished = this.deleteService.status();
+
+      const successMessage: number = updateFinished === resolved ? 0 : createFinished === resolved ? 1 :  deleteFinished === resolved ? 2 : -1;
+      const errorMessage: number = updateFinished === error ? 0 : createFinished === error ? 1 :  deleteFinished === error ? 2 : -1;
+
+      switch(successMessage) {
+        case 0:
+          this.toastr.success('Avatar successfully updated');
+          break;
+        case 1:
+          this.toastr.success('Avatar successfully created');
+          break;
+        case 2:
+          this.toastr.success('Avatar successfully deleted');
+          break;
+      }
+
+      switch(errorMessage) {
+        case 0:
+          this.toastr.error('Can\'t update Avatar');
+          break;
+        case 1:
+          this.toastr.error('Can\'t create Avatar');
+          break;
+        case 2:
+          this.toastr.error('Can\'t delete Avatar');
+          break;
+      }
+
+      if(updateFinished === resolved || createFinished === resolved || deleteFinished === resolved) {
+        this.router.navigate(['/']);
+      }
     });
   }
 
@@ -152,43 +169,31 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
     this.previewImageData.set('');
   }  
 
-  submit(): void {
-    if(this.avatarPersonForm.valid && this.avatarCharacteristicForm.valid) {
-      const avatarPerson: AvatarPerson = Object.assign(this.avatarPersonForm.value);
-      const avatarCharacteristics: AvatarCharacteristic = Object.assign(this.avatarCharacteristicForm.value);
-      const avatarImage: AvatarImage = {
-        base64: this.previewImageData()
-      };
+    submit($event: SubmitEvent): void {    
+    $event.preventDefault();
 
-      avatarPerson.avatarCharacteristic = avatarCharacteristics;
-      avatarPerson.avatarImage = avatarImage;
-
-      if(this.isUpdateMode() && this._updateData()) {
-        avatarPerson.id = this._updateData()!.id;
-        avatarPerson.avatarCharacteristic.id = this._updateData()?.avatarCharacteristic?.id ?? 0;
-        avatarPerson.avatarImage.id = this._updateData()?.avatarImage?.id ?? 0;
-      }
-
-      this.entity.set(avatarPerson);
+    if(this.avatarForm().valid() && this.previewImageData() !== '') {
+      const avatarPerson: AvatarPerson = Object.assign(this.avatarForm().value());
+      avatarPerson.avatarImage!.base64 = this.previewImageData();
 
       if(this.isUpdateMode()) {
-        this.apiUrl.set(`${api}Avatar/Update`);
-        this.method.set('PUT');
+        avatarPerson.id = this.byIdService.data().id;
+        avatarPerson.avatarCharacteristic!.id = this.byIdService.data().avatarCharacteristic?.id ?? 0;
+        avatarPerson.avatarImage!.id = this.byIdService.data().avatarImage?.id ?? 0;
+        this.updateService.entity.set(avatarPerson);
       } else {
-        this.apiUrl.set(`${api}Avatar/Create`);
-        this.method.set('POST');
+        this.createService.entity.set(avatarPerson);
       }
     } else {
-      this.avatarPersonForm.markAllAsTouched();
-      this.avatarCharacteristicForm.markAllAsTouched();
-      this.toastr.error('Forms invalid');
+      this.avatarForm().markAsTouched();
+      this.toastr.error('Forms invalid or no image');
     }
   }
 
   deleteAvatar(): void {
-    if(this._updateData()) {
+    if(this.isUpdateMode()) {
       this.dialogData.dialogMessage = 'Do you want to delete the Avatar below?';
-      this.dialogData.dialogAdditionalText = `Avatar: ${this._updateData()!.name} - Age: ${this._updateData()!.age}`;  
+      this.dialogData.dialogAdditionalText = `Avatar: ${this.byIdService.data().name} - Age: ${this.byIdService.data()!.age}`;
       this.showDialog.set(true);
     }   
   }
@@ -199,17 +204,12 @@ export class AvatarsCreateOrUpdateComponent extends GenericsCreateOrUpdateClass<
     this.showDialog.set(false);
 
     if($event) {
-      this.avatarDeleteService.apiUrl.set(`${api}Avatar/Delete`);
-      this.avatarDeleteService.targetId.set(this.id());      
+      this.deleteService.id.set(this.id());
     }    
   }
 
   private loadImagePreview(base64string: string): void {
     this.previewImageData.set(base64string);
-  }
-
-  private service() : AvatarByIdService {
-    return this.avatarByIdService;
   }
 
 }

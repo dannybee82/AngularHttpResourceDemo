@@ -1,12 +1,9 @@
-import { HttpResourceRef } from "@angular/common/http";
-import { WritableSignal } from "@angular/core";
+import { Signal, WritableSignal } from "@angular/core";
 
 export interface GenericsDeleteInterface {
-    targetId: WritableSignal<number>;
-
-    deleteResource: HttpResourceRef<boolean | undefined>;
+    id: WritableSignal<number | undefined>;
 
     data: WritableSignal<boolean | undefined>;
 
-    onTargetIdChange(id: number): void;
+    hasValue: Signal<boolean>;
 }

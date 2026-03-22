@@ -3,12 +3,16 @@ import { MenuComponent } from './components/menu/menu.component';
 
 export const routes: Routes = [
     {
-        path: '',
+         path: '',
         component: MenuComponent,
         children: [
             {
+                path: '',
+                loadComponent: () => import('./pages/all-avatars/all-avatars.component').then(c => c.AllAvatarsComponent),                
+            },
+            {
                 path: 'all-avatars',
-                loadComponent: () => import('./pages/all-avatars/all-avatars.component').then(c => c.AllAvatarsComponent)
+                loadComponent: () => import('./pages/all-avatars/all-avatars.component').then(c => c.AllAvatarsComponent),                
             },
             {
                 path: 'edit/:mode/:id',

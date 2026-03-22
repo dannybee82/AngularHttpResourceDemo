@@ -1,5 +1,5 @@
 <div class="row p-0 ms-1">
-    <form [formGroup]="this.filterForm">
+    <form [formGroup]="filterForm">
         <div class="row w-100 p-0">
             <div class="column">
                 <mat-form-field>
@@ -24,7 +24,7 @@
             <div class="column">
                 <mat-checkbox formControlName="hasEarrings">Has Earrings?</mat-checkbox>   
             </div>
-            @if(this.isFilterOn()) {
+            @if(isFilterOn()) {
                 <div class="column">
                     <button type="button" mat-raised-button color="warn" (click)="reset()">
                         <mat-icon>cancel</mat-icon>
@@ -35,9 +35,9 @@
         </div>
     </form>
 </div>
-@if(this.isFilterOn()) {
+@if(isFilterOn()) {
     <div class="row p-0 ms-1">
-        @for(item of this.getActiveFilters(); track $index) {
+        @for(item of getActiveFilters(); track $index) {
             <button type="button" mat-stroked-button color="accent" (click)="removeFilter(item.name, item.value)" class="ms-1">
                  <span>{{ `${item.title }: ${item.value | titlecase}` }}</span>
                  <mat-icon>cancel</mat-icon>

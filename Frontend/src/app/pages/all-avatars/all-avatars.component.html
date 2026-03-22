@@ -1,19 +1,19 @@
 <app-filters
-    (filterValues)="this.filterAvatars($event)">
+    (filterValues)="filterAvatars($event)">
 </app-filters>
 <div class="column p-1">   
-    @if(this.isLoading()) {
+    @if(service.isLoading()) {
         <div class="row p-1">
             <p>Loading...</p>
         </div>
     }
-    @if(this.data() && !this.isLoading()) {
-        @if(this.data()?.length ?? 0 > 0)  {
+    @if(service.data() && !service.isLoading()) {
+        @if(service.data()?.length ?? 0 > 0)  {
             <div class="row p-0 ms-1 w-100">
-                <h3>{{ `${this.data()?.length} Avatars` }}</h3>
+                <h3>{{ `${service.data()?.length} Avatars` }}</h3>
             </div>
             <div class="grid-container w-50 p-1">
-                @for(avatar of this.data(); track avatar.id) {
+                @for(avatar of service.data(); track avatar.id) {
                     <mat-card appearance="outlined">
                         <mat-card-header>
                             <mat-card-title>{{avatar.name}}</mat-card-title>
@@ -37,9 +37,9 @@
             <p>There are no avatars to show</p>
         }
     }
-    @if(this.error()) {
+    @if(service.error()) {
         <div class="row p-1">
-            <p>Error occurred: {{ this.error() }}</p>
+            <p>Error occurred: {{ service.error() }}</p>
         </div>
     }
 </div>

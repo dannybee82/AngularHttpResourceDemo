@@ -1,12 +1,9 @@
-import { HttpResourceRef } from "@angular/common/http";
 import { Signal } from "@angular/core";
 
-export interface GenericsAllInterface<T> {
-    getAllResource: HttpResourceRef<T[] | undefined>;
-   
+export interface GenericsAllInterface<T> {   
     data: Signal<T[] | undefined>;
 
-    hasValue: boolean;
+    hasValue: Signal<boolean>;
 
     reload(): void;
 }

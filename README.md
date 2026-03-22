@@ -7,6 +7,7 @@ The .NET/C# WebAPI stores Avatars/images in the database as base64-strings.
 The Angular application uses interfaces and abstract classes to reduce the amount of code.  
 And the Angular application can fetch, filter, create, update and delete Avatars/images.  
 The Angular application is _Zoneless_ (no Zone.js) and without _RxJs_.  
+
 See the images in the root of this project for examples.
 
 ### **PostgreSQL database:**
@@ -29,7 +30,9 @@ For more information see the link below:
 
 [https://learn.microsoft.com/en-us/ef/core/cli/dotnet](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)
 
-### **Angular application (with** [**Angular CLI**](https://github.com/angular/angular-cli) **version 21.0.0) installation**
+### **Angular application (with** [**Angular CLI**](https://github.com/angular/angular-cli) **version 21.2.3) installation**
+
+**Angular 21** needs a **Node.js** version of at least _20.19.0_
 
 **Command to install**
 
@@ -48,6 +51,26 @@ or shorter:
 _ng s --o_
 
 ### **Changelog:**
+
+_March 2026_
+
+\- Updated packages for Angular 21.
+
+\- Removed empty homepage.
+
+\- Updated _Vitest_ specification/test files for future use.
+
+\- Changed abstract classes to Injectables for reusability, maintainability and lesser code.
+
+\- Replaced _Reactive Form_ with _Signal Form_.
+
+\- Various changes in templates and components.
+
+**Backend:**
+
+\- Added 5 new Avatars.
+
+\- Changes in code to add more Avatars easily in the future.
 
 _November 2025_
 
