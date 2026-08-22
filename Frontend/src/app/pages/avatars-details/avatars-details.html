@@ -1,0 +1,43 @@
+<div class="container w-100">
+    @if(avatarService.isLoading()) {
+        <div class="row p-1">
+            Loading...
+        </div>
+    }
+    @if(avatarService.data() && !avatarService.isLoading()) {
+        <div class="row p-1 w-100">
+            <mat-card appearance="outlined" class="w-25">
+                <mat-card-header>
+                    <mat-card-title>{{avatarService.data()!.name}}</mat-card-title>
+                    <mat-card-subtitle>{{ `Age: ${avatarService.data()!.age}` }}</mat-card-subtitle>
+                </mat-card-header>                    
+                @if(avatarService.data()!.avatarImage?.base64) {
+                    <img mat-card-image [src]="$safeNavigationMigration(avatarService.data()!.avatarImage?.base64)" [alt]="avatarService.data()!.name" [title]="avatarService.data()!.name" class="avatar-image">
+                }
+                <mat-card-content>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>Hair Color</th>
+                                <td>{{ $safeNavigationMigration(avatarService.data()!.avatarCharacteristic?.hairColor) | titlecase }}</td>
+                            </tr>
+                            <tr>
+                                <th>Eye Color</th>
+                                <td>{{ $safeNavigationMigration(avatarService.data()!.avatarCharacteristic?.eyeColor) | titlecase }}</td>
+                            </tr>
+                            <tr>
+                                <th>Has Earrings</th>
+                                <td>{{ avatarService.data()!.avatarCharacteristic?.hasEarrings ?? false ? 'Yes' : 'No' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    }
+    @if(avatarService.error()) {
+        <div class="row p-1">
+            Error: Can't fetch Avatar.
+        </div>
+    }
+</div>

@@ -36,8 +36,18 @@ namespace ExampleAvatarRepository.DummyData
                 },
                 new AvatarPerson()
                 {
+                    Name = "Ava",
+                    Age = 20,
+                },
+                new AvatarPerson()
+                {
                     Name = "Caitlin",
                     Age = 29,
+                },
+                new AvatarPerson()
+                {
+                    Name = "Camille",
+                    Age = 21,
                 },
                 new AvatarPerson()
                 {
@@ -56,8 +66,18 @@ namespace ExampleAvatarRepository.DummyData
                 },
                 new AvatarPerson()
                 {
+                    Name = "Daphne",
+                    Age = 26,
+                },
+                new AvatarPerson()
+                {
                     Name = "Eléonore",
                     Age = 29,
+                },
+                new AvatarPerson()
+                {
+                    Name = "Elizabeth",
+                    Age = 26,
                 },
                 new AvatarPerson()
                 {
@@ -69,7 +89,17 @@ namespace ExampleAvatarRepository.DummyData
                     Name = "Grace",
                     Age = 21,
                 },
-                 new AvatarPerson()
+                new AvatarPerson()
+                {
+                    Name = "Gwendolyn",
+                    Age = 19,
+                },
+                new AvatarPerson()
+                {
+                    Name = "Isabelle",
+                    Age = 32,
+                },
+                new AvatarPerson()
                 {
                     Name = "Jade",
                     Age = 23,

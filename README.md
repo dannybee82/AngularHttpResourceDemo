@@ -1,12 +1,12 @@
-### **Angular 21 HttpResource Avatars Demo + .NET/C# WebAPI + PostgreSQL database**
+### **Angular 22 HttpResource Avatars Demo + .NET/C# WebAPI + PostgreSQL database**
 
-A demo that demonstrates the new experimental **Angular 21** _HttpResource_ function.  
+A demo that demonstrates the new **Angular 22** _HttpResource_ _Api_.  
 It uses a simple .NET/C# WebAPI as Backend and a PostgreSQL database.  
 The .NET/C# WebAPI stores Avatars/images in the database as base64-strings.
 
 The Angular application uses interfaces and abstract classes to reduce the amount of code.  
 And the Angular application can fetch, filter, create, update and delete Avatars/images.  
-The Angular application is _Zoneless_ (no Zone.js) and without _RxJs_.  
+The Angular application is _Zoneless_ (no Zone.js) and without _RxJS_.
 
 See the images in the root of this project for examples.
 
@@ -26,13 +26,17 @@ When the tool is installed, run the command for a _database migration:_
 
 **dotnet ef database update**
 
+Or use the longer command (and replace: \*_your\_workspace\*_):
+
+_dotnet ef database update -p "\*your\_workspace\*/Backend/ExampleAvatarRepository/ExampleAvatarRepository.csproj" --startup-project "\*your\_workspace\*/Backend/ExampleAvatarsApp/ExampleAvatarsApp.csproj"_
+
 For more information see the link below:
 
 [https://learn.microsoft.com/en-us/ef/core/cli/dotnet](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)
 
-### **Angular application (with** [**Angular CLI**](https://github.com/angular/angular-cli) **version 21.2.3) installation**
+### **Angular application (with** [**Angular CLI**](https://github.com/angular/angular-cli) **version 22.1.5) installation**
 
-**Angular 21** needs a **Node.js** version of at least _20.19.0_
+**Angular 22** needs a **Node.js** version of at least _22.22.3_
 
 **Command to install**
 
@@ -51,6 +55,28 @@ or shorter:
 _ng s --o_
 
 ### **Changelog:**
+
+_August 2026_
+
+**Backend:**
+
+\- Added 6 new Avatars.
+
+**Frontend:**
+
+\- Upgrade to _Angular 22_ and upgraded other packages.
+
+\- Migrated _@Injectable_ to _@Service_.
+
+\- Using the default: _ChangeDetectionStrategy.OnPush_ in stead of _ChangeDetectionStrategy.Eager_.
+
+\- Using the latest file naming conventions - and deleting the old schematics from _angular.json_
+
+\- Removed package: _ngx-toastr_ (replaced by a custom implementation using Angular Material Snackbar component).
+
+\- Added more error messages in the pages.
+
+\- Updated the image-cropper to the latest version.
 
 _March 2026_
 
@@ -74,7 +100,7 @@ _March 2026_
 
 _November 2025_
 
-**Frontend changes:** 
+**Frontend changes:**
 
 \- Upgrade to _Angular 21_ and upgraded other packages.
 
@@ -88,7 +114,7 @@ _July 2025_
 
 \- use explicit _StopTracking_ when deleting records.
 
-**Frontend changes:** 
+**Frontend changes:**
 
 \- Upgrade to Angular 20.
 

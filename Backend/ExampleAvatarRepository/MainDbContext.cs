@@ -46,6 +46,8 @@ namespace ExampleAvatarRepository
                 .Concat(CreateDummyAvatarImagePart_004.Create())
                 .Concat(CreateDummyAvatarImagePart_005.Create())
                 .Concat(CreateDummyAvatarImagePart_006.Create())
+                .Concat(CreateDummyAvatarImagePart_007.Create())
+                .Concat(CreateDummyAvatarImagePart_008.Create())
             .ToList();
 
             // Add indexes.

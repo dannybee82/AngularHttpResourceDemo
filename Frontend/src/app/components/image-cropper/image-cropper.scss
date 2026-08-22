@@ -1,0 +1,46 @@
+.cropper-container {  
+  display: block;  
+  width: 100%;  
+  height: 600px;  
+  
+  img {  
+    display: block;  
+    max-width: 100%;  
+  }  
+  
+  ::ng-deep cropper-canvas {  
+    display: block;  
+    width: 100%;  
+    height: 100%;  
+  }  
+  
+  ::ng-deep cropper-image {  
+    display: block;  
+    width: 100%;  
+    height: 100%;  
+    object-fit: contain;  
+  }  
+  
+  ::ng-deep cropper-shade {  
+    width: 100%;  
+    height: 100%;  
+  }  
+}
+
+::ng-deep cropper-selection {  
+  outline: none;  
+  
+  &::after {  
+    content: '';  
+    position: absolute;  
+    inset: 0;  
+    border-radius: 50%;  
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);  
+    pointer-events: none;
+  }  
+}
+  
+// Hide the default rectangular shade overlay  
+::ng-deep cropper-shade {  
+  display: none;  
+}

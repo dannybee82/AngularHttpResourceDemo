@@ -1,0 +1,59 @@
+@if(dialog()) {
+    <div class="container justify-content-center modal" (click)="closeDialog()">
+      <div class="column contents p-1" (click)="$event.stopPropagation()">
+        <div class="row">
+          @if(getType().NONE != dialog()?.dialogType) {
+            <div class="row p-0">
+              <p>
+                @switch ($safeNavigationMigration(dialog()?.dialogType)) {
+                  @case (getType().INFO) {
+                    <mat-icon>info</mat-icon>
+                  }
+                  @case(getType().QUESTION) {
+                    <mat-icon>help</mat-icon>
+                  }
+                  @case(getType().WARNING) {
+                    <mat-icon>warning</mat-icon>
+                  }
+                  @case(getType().ERROR) {
+                    <mat-icon>dangerous</mat-icon>
+                  }
+                }                
+              </p>
+              <p><strong class="ms-1 pt-1">{{ dialog()?.dialogTitle }}</strong></p>
+            </div>
+          }
+        </div>
+        <div class="row p-0">
+          <div class="col-auto  ms-1">
+            {{ dialog()?.dialogMessage }}
+          </div>
+        </div>
+        @if( dialog()?.dialogAdditionalText ) {
+          <div class="row p-0">
+            <div class="col-auto ms-1">
+              {{ dialog()?.dialogAdditionalText }}
+            </div>
+          </div>
+        }
+        <div class="row p-0 flex-end mt-2">
+          @if(dialog()?.dialogCancellationText !== '') {
+            <div class="column">
+              <button type="button"mat-raised-button color="warn" (click)="cancel()">
+                <mat-icon>close</mat-icon>
+                <span class="ms-1">{{ dialog()?.dialogCancellationText }}</span>
+              </button>
+            </div>
+          }
+          <div class="column">
+            <button type="button" mat-raised-button color="primary" (click)="ok()">
+              @if(dialog()?.dialogConfirmationIcon) {
+                <mat-icon>{{dialog()?.dialogConfirmationIcon}}</mat-icon>
+              }
+              <span class="ms-1">{{ dialog()?.dialogConfirmationText }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+}

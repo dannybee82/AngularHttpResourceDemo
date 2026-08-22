@@ -2,7 +2,8 @@ import { InjectionToken } from '@angular/core';
   
 export interface ResourceConfig {  
   controller: string;  
-  methodGetAll: string;  
+  methodGetAll?: string;  
+  methodGetAllById?: string;
   methodByParams?: string;  
   methodById?: string;
   methodCreate?: string;

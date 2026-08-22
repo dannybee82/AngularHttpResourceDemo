@@ -1,6 +1,6 @@
 import { DialogType } from "./dialog-type.enum"
 
-export interface Dialog {
+export interface DialogInterface {
     dialogType: DialogType,
     dialogTitle: string,
     dialogMessage: string,

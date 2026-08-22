@@ -1,7 +1,7 @@
 import { Signal, WritableSignal } from "@angular/core";
 
 export interface GenericsByIdInterface<T> {
-    id: WritableSignal<number | undefined>;
+    params: WritableSignal<Record<string, any> | undefined>;
 
     data: Signal<T | undefined>;    
 
